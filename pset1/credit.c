@@ -44,16 +44,18 @@ int realCard(long long number)
 // Makes arithmetic actions
 bool arithmetic(int number[], const int SIZE)
 {
-	int sum = 0;
-	int mult = 0;
+	/*int sum = 0;
+	int mult = 0;*/
 	for (int i = 1; i < SIZE; i += 2) {
-		mult = number[i] * 2;
-		if(mult >= 10) sum += (mult-9);
-		else sum += mult;
+		number[17] = number[i] * 2;			//mult = number[i] * 2;
+		if (number[17] >= 10)				//if(mult >= 10) 
+			number[18] += (number[17] - 9);		//sum += (mult-9);
+		else 
+			number[18] += number[17];			//sum += mult;
 	}
 	for (int i = 0; i < SIZE; i += 2)
-		sum += number[i];
-	return sum % 10 == 0;
+		number[18] += number[i];				//sum += number[i];
+	return  number[18] % 10 == 0;			//sum % 10 == 0;
 }
 
 // Define payment cards company
