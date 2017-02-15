@@ -26,36 +26,54 @@ long long getValue()
 // Setting parameters
 int realCard(long long number)
 {
-	int numberArray[20] = {0};
+	/*
+	MAX_LENGTH - maximum length of array
+	MOD        - modulo
+	MIN_LENGTH - credit cards start from 13-digit numbers
+	INVALID    - invalid credit card number
+	*/
+	enum constants {
+		INVALID = 1, MOD = 10, MIN_LENGTH = 13, MAX_LENGTH = 20
+	};
+	int numberArray[MAX_LENGTH] = {0};
 	int i = 0;
 	for (; number > 0; i++) {
-		numberArray[i] = number % 10;
-		number /= 10;
+		numberArray[i] = number % MOD;
+		number /= MOD;
 	}
 	const int SIZE = i;
-
-	if (SIZE > 12 && arithmetic(numberArray, SIZE))
+	
+	if (SIZE >= MIN_LENGTH && arithmetic(numberArray, SIZE))
+		// SIZE - 1 in this case first number in credit card
 		company(numberArray[SIZE - 1]);
 	else 
-		company(0);
+		company(INVALID);
 	return 0;
 }
 
 // Makes arithmetic actions
 bool arithmetic(int number[], const int SIZE)
 {
-	/*int sum = 0;
-	int mult = 0;*/
-	for (int i = 1; i < SIZE; i += 2) {
-		number[17] = number[i] * 2;			//mult = number[i] * 2;
-		if (number[17] >= 10)				//if(mult >= 10) 
-			number[18] += (number[17] - 9);		//sum += (mult-9);
+	/*
+	PROD - current product
+	SUM  - current sum
+	MOD  - modulo
+	DOUB - double the value of every second digit
+	SUB  - if the result of doubling operation > 9, then subtract 9 from the product
+	*/
+	enum constants {
+		DOUB = 2, STEP = 2, SUB = 9, MOD, PROD = 17, SUM 
+	};
+	for (int i = 1; i < SIZE; i += STEP) {
+		number[PROD] = number[i] * DOUB;
+		if (number[PROD] >= MOD)
+			number[SUM] += (number[PROD] - SUB);
 		else 
-			number[18] += number[17];			//sum += mult;
+			number[SUM] += number[PROD];
 	}
-	for (int i = 0; i < SIZE; i += 2)
-		number[18] += number[i];				//sum += number[i];
-	return  number[18] % 10 == 0;			//sum % 10 == 0;
+	for (int i = 0; i < SIZE; i += STEP)
+		number[SUM] += number[i];
+	return  number[SUM] % MOD == 0;
 }
 
 // Define payment cards company

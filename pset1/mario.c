@@ -5,8 +5,6 @@ int getValue();
 bool checkValue(int);
 void createPyramids(int);
 void printChar(int, const char*);
-/*void printSpaces(int);
-void printHashes(int);*/
 
 //more comfortable
 int main(void)
@@ -29,9 +27,10 @@ int getValue()
 // Check user input
 bool checkValue(int userValue)
 {
-	if(userValue < 0 || userValue > 23)
+	const int MAX_HEIGHT = 23;
+	if(userValue < 0 || userValue > MAX_HEIGHT)
 	{
-	    printf("Your value must be between 0 and 23.\n");
+	    printf("Your value must be between 0 and %i.\n", MAX_HEIGHT);
 	    return false;
 	}
     else
@@ -44,11 +43,11 @@ bool checkValue(int userValue)
 void createPyramids(int height)
 {
 	const int GAP = 2;
-	for (int lines = 0; lines < height; lines++) {
-		printChar(height - lines - 1, " "); //printSpaces(height - lines - 1);
-		printChar(lines + 1, "#");			//printHashes(lines + 1);
-		printChar(GAP, " ");				//printSpaces(GAP);
-		printChar(lines + 1, "#");			//printHashes(lines + 1);
+	for (int lines = 1; lines <= height; lines++) {
+		printChar(height - lines , " ");
+		printChar(lines, "#");
+		printChar(GAP, " ");
+		printChar(lines, "#");
 		printf("\n");
 	}
 }
@@ -59,17 +58,3 @@ void printChar(int count, const char* sym)
 	for (int c = 0; c < count; c++)
 		printf("%s", sym);
 }
-
-// Print spaces multiple times
-/*void printSpaces(int count)
-{
-	for (int c = 0; c < count; c++)
-		printf("%s", " ");
-}
-
-// Print hashes multiple times
-void printHashes(int count)
-{
-	for (int c = 0; c < count; c++)
-		printf("%s", "#");
-}*/
