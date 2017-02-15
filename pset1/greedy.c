@@ -16,13 +16,15 @@ int main(void)
 // Get query of user change
 int getValue(void)
 {
+    // Round to integers
+    const int TO_INT = 100;
     float input = 0;
 	printf("O hai! How much change is owed?\n");
 	do {
 		input = get_float();
 	} while (!checkValue(input));
 	// Further operate with integer values
-	return (int) round(input * 100);
+	return (int) round(input * TO_INT);
 }
 
 // Check user input
