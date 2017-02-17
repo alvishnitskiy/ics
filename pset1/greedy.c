@@ -46,28 +46,19 @@ void giveChange(int money)
 {
     enum coinsNames { QUARTER = 25, DIME = 10, NICKEL = 5, PENNY = 1 };
     int coins [] = { QUARTER, DIME, NICKEL, PENNY };
-    printf("%i", countCoins(money, coins));
+    
+    printf("%i", countCoins(money, &coins[0]));
     printf("\n");
 }
 
 // Recursive calculation of the number of coins
 int countCoins(int money, int *coins)
 {
-    const int COINS_TYPE = 4;
     int change = 0;
-    int coin = 0;
-    for (int i = 0; i < COINS_TYPE; i ++)
-    {
-        if ((money - coins[i]) >= 0)
-        {
-            coin = coins[i];
-            break;
-        }
-    }
-    change = (int) (money / coin);
-    money = money % coin;
+    change = (int) (money / *coins);
+    money %= *coins;
+    
     if (money > 0)
-        return change + countCoins(money, coins);
-    else
-        return change;
+        return change + countCoins(money, ++coins);
+    return change;
 }
