@@ -15,32 +15,14 @@ D - 1
 #include <ctype.h>
 #include <cs50.h>
 
-char* getValue(void);
-void calculation(char*);
+char* getTextLine(void);
+void calculation(int letters[][2], char*);
 void assign(int [], int);
 void bubbleSort(int [][2]);
 void printResults(int [][2]);
 
  int main(void)
  {
-    calculation(getValue());
-    return 0;
- }
-
-// Get plaintext from user
-char* getValue(void)
-{
-    printf("Eenter the string: ");
-    char* userString = get_string();
-    if (userString != NULL)
-        return userString;
-    else
-        exit(1); // return "";
-}
- 
-// Make statistical calculations
-void calculation(char* userString)
-{
     /*
     DIMENSION  - 2 dimention: letters and values
     ALPHABET   - letters in alphabet
@@ -52,6 +34,30 @@ void calculation(char* userString)
     for(int i = 0; i < ALPHABET; i++ ) {
         letters [i][0] = letters [i][1] = 0;
     }
+    
+    calculation(letters, getTextLine());
+    bubbleSort(letters);
+    printResults(letters);
+    return 0;
+ }
+
+// Get a line of text from the user
+char* getTextLine(void)
+{
+    printf("Eenter the string: ");
+    char* userString = get_string();
+    
+    if (userString != NULL) {
+        return userString;
+    }
+    else {
+        exit(1);
+    }
+}
+
+// Make statistical calculations
+void calculation(int letters[][2], char* userString)
+{
     int letter = 0;
     for (int i = 0; userString[i] != '\0'; i++ ) {
         letter = (int)toupper(userString[i]);
@@ -71,8 +77,6 @@ void calculation(char* userString)
             }
         }
     }
-    bubbleSort(letters);
-    printResults(letters);
 }
 
 // Assigning values
@@ -92,17 +96,21 @@ void bubbleSort(int letters[][2])
 
     do {
         permutation = 0;
-        for (x = 1; x < ALPHABET; x++ )
-            if (letters[x - 1][1] < letters[x][1])
-            {
+        for (x = 1; x < ALPHABET; x++ ) {
+            if (letters[x - 1][1] < letters[x][1]) {
+                
                 curElem[0] = letters[x][0];
                 curElem[1] = letters[x][1];
+                
                 letters[x][0] = letters[x - 1][0];
                 letters[x][1] = letters[x - 1][1];
+                
                 letters[x - 1][0] = curElem[0];
                 letters[x - 1][1] = curElem[1];
+                
                 permutation = 1;
             };
+        }
     } while (permutation);
 }
 
@@ -110,7 +118,9 @@ void bubbleSort(int letters[][2])
 void printResults(int letters[][2])
 {
     const int ALPHABET = 26;
-    for (int i = 0; i < ALPHABET; i++ )
-        if (isalpha(letters [i][0]))
+    for (int i = 0; i < ALPHABET; i++ ) {
+        if (isalpha(letters [i][0])) {
             printf("%c - %i\n", letters [i][0], letters [i][1]);
+        }
+    }
 }

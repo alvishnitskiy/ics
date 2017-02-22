@@ -11,18 +11,18 @@ void counter(int*, int);
 
 int main(int argc, string argv[])
 {
-    if (argc != 2)
-    {
+    if (argc != 2) {
         printf("Usage: ./crack hash\n");
         return 1;
     }
+    
     const char *password = argv[1];
     checker(password);
     return 0;
 }
 
 // Setting parameters and check password
-void checker(const char *password)
+void checker(const char* password)
 {
     /*
     SALT       - two characters
@@ -43,21 +43,22 @@ void checker(const char *password)
     while(coun[RIGHT_ELEM] > 0) {
         char key[KEY_ELEM] = "";
         char cc;
-        for (int i = 0; i < ALL_ELEM; i++ )
-        {
-            if(coun[i] > 0){
-                if(coun[i] > ALPHABET)
+        for (int i = 0; i < ALL_ELEM; i++ ) {
+            if(coun[i] > 0) {
+                if(coun[i] > ALPHABET) {
                     cc = O_SMALL + coun[i] - ALPHABET; // '`'
-                else
+                }
+                else {
                     cc = O_CAPITAL + coun[i]; // '@'
+                }
                 strncat(key, &cc, 1);
             }
         }
-        printf("%s\n", key);
+        //printf("%s\n", key);
         char salt[SALT];
         strncpy(salt, password, SALT);
         char *cipher = crypt(key, salt);
-        if (strcmp(cipher, password) == 0){
+        if (strcmp(cipher, password) == 0) {
             printf("%s\n", key);
             break;
         }
@@ -66,7 +67,7 @@ void checker(const char *password)
 }
 
 // Recursive character counter
-void counter(int *coun, int curElem)
+void counter(int* coun, int curElem)
 {
     /*
     ALL_ELEM        - all elements of array
@@ -79,9 +80,11 @@ void counter(int *coun, int curElem)
     digTrans = (++coun[curElem]) / DOUBLE_ALPHABET;
     coun[curElem] = (coun[curElem]++) % DOUBLE_ALPHABET;
     if(digTrans > 0) {
-        if(curElem == 0) 
-            for(int i = 0; i < ALL_ELEM; i++ )
+        if(curElem == 0) {
+            for(int i = 0; i < ALL_ELEM; i++ ) {
                 coun[i] = 0;
+            }
+        }
         else {
             coun[curElem]++;
             curElem--;

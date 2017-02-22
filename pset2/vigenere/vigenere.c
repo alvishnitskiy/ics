@@ -4,63 +4,68 @@
 #include <ctype.h>
 #include <cs50.h>
 
-char* getValue(void);
+char* getPlainText(void);
 bool checkValue(char* userValue);
-void cryptography(char*, char*);
+void encryptMessage(char*, char*);
 int changeAlph(char);
 char changeAlphASCII(int, char);
 
 int main(int argc, string argv[])
 {
-    if (argc != 2 || !checkValue(argv[1]))
-    {
+    if (argc != 2 || !checkValue(argv[1])) {
         printf("Usage: ./caesar k\n");
         return 1;
     }
-    cryptography(argv[1], getValue());
+    encryptMessage(argv[1], getPlainText());
     return 0;
 }
 
 // Get plaintext from user
-char* getValue(void)
+char* getPlainText(void)
 {
 	printf("plaintext: ");
 	char* s = get_string();
-    if (s != NULL)
+	
+    if (s != NULL) {
         return s;
-	else
+    }
+	else {
 	    return "";
+	}
 }
 
 // Check user input
 bool checkValue(char* userValue)
 {
-	for (int i = 0, n = strlen(userValue); i < n; i++ ){
-	    if(!isalpha(userValue[i]))
+	for (int i = 0, n = strlen(userValue); i < n; i++ ) {
+	    if(!isalpha(userValue[i])) {
 	        return false;
+	    }
 	}
     return true;
 }
 
 // encrypting by formula c[i] = (p[i] + k[j]) mod 26
-void cryptography(char* k, char* p)
+void encryptMessage(char* k, char* p)
 {
-    enum constants { UPP_CASE = 0, LOW_CASE = 1, MAX_SIZE = 30 };
+    enum constants { 
+        UPP_CASE = 0, LOW_CASE = 1, MAX_SIZE = 30 
+    };
     const int SIZE = strlen(k);
     int keyInt[MAX_SIZE];
-    for (int i = 0; i < SIZE; i++ ){
+    for (int i = 0; i < SIZE; i++ ) {
         keyInt[i] = changeAlph(k[i]);
     }
     printf("ciphertext: ");
     int j = 0;
-    for (int i = 0, n = strlen(p); i < n; i++)
-    {
+    for (int i = 0, n = strlen(p); i < n; i++) {
         if(isalpha(p[i])) {
             printf("%c", changeAlphASCII(keyInt[j], p[i]));
             j = (j + 1) % SIZE;
         }
-        else
+        else {
             printf("%c", p[i]);
+        }
     }
     printf("\n");
 }
@@ -96,8 +101,9 @@ char changeAlphASCII(int k, char sym)
     sym = (sym - A_ASCII + k) % ALPHABET;
     sym += A_ASCII;
     // Back to small letters
-    if(letterСase)
+    if(letterСase) {
         return sym += DIFF_CASE;
+    }
     // For capital letters
     return sym;
 }
