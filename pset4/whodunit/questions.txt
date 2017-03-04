@@ -1,0 +1,56 @@
+1.  What’s stdint.h?
+
+    This file contain definitions of several signed and unsigned integer types.
+
+2.  What’s the point of using uint8_t, uint32_t, int32_t, and uint16_t in a program?
+
+    They are used to describe aliases for primitive data types.
+
+3.  How many bytes is a BYTE, a DWORD, a LONG, and a WORD, respectively?
+
+    BYTE is 8, WORD is 16, DWORD and LONG are 32 bytes respectively.
+
+4.  What (in ASCII, decimal, or hexadecimal) must the first two bytes of any BMP file be? 
+    Leading bytes used to identify file formats (with high probability) are generally called 
+    "magic numbers."
+
+    The first 2 bytes of the BMP file format are the characters "B" and "M" in ASCII encoding, 
+    0x42 0x4D in hexadecimal and 66 77 in decimal encoding respectively.
+
+5.  What’s the difference between bfSize and biSize?
+
+    bfSize is equal to size, in bytes, of the bitmap file, and biSize is the number of bytes 
+    required by the structure of BITMAPINFOHEADER.
+
+6.  What does it mean if biHeight is negative?
+
+    If biHeight is negative, the bitmap is a top-down device independent bitmap and its origin
+    is the upper-left corner.
+
+7.  What field in BITMAPINFOHEADER specifies the BMP’s color depth (i.e., bits per pixel)?
+
+    The biBitCount determines the number of bits that define each pixel and the maximum number 
+    of colors in the bitmap.
+
+8.  Why might fopen return NULL in lines 24 and 32 of copy.c?
+
+    Upon  successful  completion  fopen() return a FILE pointer.  Otherwise, NULL is
+    returned and errno is set to indicate the error.
+
+9.  Why is the third argument to fread always 1 in our code?
+
+    In our case this means to read data in one data structure.
+
+10. What value does line 65 of copy.c assign to padding if bi.biWidth is 3?
+
+    padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4 =
+    = (4 - (3 * 3) % 4) % 4 = (4 - 1) % 4 = 3
+
+11. What does fseek do?
+
+    The fseek() function skip over padding by adding padding bytes to the position 
+    specified by SEEK_CUR.
+
+12. What is SEEK_CUR?
+
+    SEEK_CUR is the current position indicator in the file.
