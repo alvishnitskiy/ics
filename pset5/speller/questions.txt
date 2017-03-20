@@ -1,0 +1,50 @@
+0.  What is pneumonoultramicroscopicsilicovolcanoconiosis?
+
+    This word refers to a lung disease that is otherwise known as silicosis.
+
+1.  According to its man page, what does getrusage do?
+
+    Function getrusage() returns resource usage measures.
+
+2.  Per that same man page, how many members are in a variable of type 
+    struct rusage?
+
+    The struct rusage has 2 members with type of struct and 14 members with 
+    type of long. Total is 16 members.
+
+3.  Why do you think we pass before and after by reference (instead of by value)
+    to calculate, even though we’re not changing their contents?
+
+    If we pass before and after by value to calculate, it would give a big bunch 
+    of variables (content of two structures of rusage is 32 in total). 
+
+4.  Explain as precisely as possible, in a paragraph or more, how main goes about 
+    reading words from a file. In other words, convince us that you indeed 
+    understand how that function’s for loop works.
+
+    Using the for loop, main reads the words from the file character by character.
+    Words can only consist of letters and apostrophes. To form the word, the 
+    main uses an array and an index, which acts as a pointer. If the string 
+    is too long to be a word or contains numbers, while loop "comes" to the end 
+    of current string without writing to array. Index, in the same time, "comes" 
+    to the begin of word array to prepare for new word.
+    
+    Next, main completes the current word with '\0' and increments the words 
+    counter. Function check() used to check word's spelling. Calculate() returns 
+    time of checking. If there is misspelled or a word is absent in the dictionary, 
+    it is printed, and the number of misspellings is increased by 1. At the end of 
+    for loop index again "comes" to the begin of word array to prepare for new word.
+
+5.  Why do you think we used fgetc to read each word’s characters one at a time 
+    rather than use fscanf with a format string like "%s" to read whole words 
+    at a time? Put another way, what problems might arise by relying on fscanf alone?
+
+    If we use fscanf, we can control the string only after it would be read. 
+    We will need an additional test to see if the string contains a number, 
+    and whether the character '\0' is present. If the string is larger than 
+    the word array, the character '\0' will not be written.
+
+6.  Why do you think we declared the parameters for check and load as const 
+    (which means "constant")?
+
+    In this case it will be impossible to change this parameters inside check and load.
