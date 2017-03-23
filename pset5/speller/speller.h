@@ -32,8 +32,14 @@ public:
     // debug info
     void tagging(const char* NAME);
     
+    // constructor for debug
+    Speller();
+    
     // constructor with filenames for dictionary and text
     Speller(const char* dictName, char* textName);
+    
+    // destructor  for debug
+    ~Speller();
     
     // organization of resources to check words
     int checking();

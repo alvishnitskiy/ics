@@ -22,6 +22,21 @@ private:
     
     const char* TAG = "linked_list";
     
+    // add to the end of list
+    bool addNext(Node* cursor, Node* newNode);
+    
+    // get next data by index
+    int getNextData(Node* cursor, int counter);
+    
+    // recursively find the next node
+    bool findNext(Node* cursor, int& info);
+    
+    // recursively delete the next node
+    bool removeNext(Node* previous, Node* current, int counter);
+    
+    // show data in next node
+    void showNext(Node* cursor);
+    
 public:
 
     // debug info
@@ -45,8 +60,8 @@ public:
     // find the data
     bool find(int info);
     
-    // remove node
-    bool remove();
+    // remove node by index
+    bool remove(int index);
 
     // remove all nodes from list
     bool removeAll();

@@ -7,7 +7,7 @@
 using namespace std;
 
 #include <stdexcept>
-
+#include <math.h>
 #include "linkedList.h"
 
 class HashMap {
@@ -27,6 +27,15 @@ private:
     int sizeOfArray;
     
     const char* TAG = "hash_map";
+    
+    // get next data by index in list
+    int getNextData(int arrayPosition, int counter);
+    
+    // recursively delete the next node in list
+    bool removeNext(int arrayPosition, int counter);
+    
+    // show data in next list
+    void showNext(int arrayPosition);
     
 public:
     
@@ -48,8 +57,14 @@ public:
     // add new node
     bool add(int info);
     
+    // get data by index
+    int get(int index);
+    
     // find the data
     bool find(int info);
+    
+    // remove node by index
+    bool remove(int index);
 
     // remove all nodes from map
     bool removeAll();

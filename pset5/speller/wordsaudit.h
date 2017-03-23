@@ -30,11 +30,17 @@ private:
 
 public:
     
+    // debug info
+    void tagging(const char* NAME);
+    
+    // constructor for debug
+    WordsAudit();
+    
     // constructor with using stopwatch, default datastructure and textfile
     WordsAudit(Stopwatch& stopwatc, Dictionary <HashMap>& dictionary, FILE* filePointer);
     
-    // debug info
-    void tagging(const char* NAME);
+    // destructor  for debug
+    ~WordsAudit();
     
     // find words and report misspellings
     void findMisspellings();

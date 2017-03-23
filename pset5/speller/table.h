@@ -9,11 +9,10 @@
 #include <ctype.h>
 
 #include "dictionary.h"
-//#include "listNode.h"
+
 #include "list.h"
 
-// ???
-#define SIZE 50
+//#define SIZE 50
 
 class HashMap {
 

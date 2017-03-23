@@ -11,6 +11,8 @@
 #include <iomanip>
 using namespace std;
 
+#define DEBUG
+
 // default dictionary
 #define DICTIONARY "dictionaries/large"
 
@@ -18,23 +20,41 @@ enum times {
     TIME_LOAD = 0, TIME_CHECK, TIME_SIZE, TIME_UNLOAD, TIME_TOTAL
 };
 
+#ifdef DEBUG
 // debug info
 void Speller::tagging(const char* NAME) {
     cout<<TAG<<" === "<<NAME<<" === "<<endl;
 }
+#endif
+
+// constructor for debug
+Speller::Speller() {
+#ifdef DEBUG
+    //tagging("Speller()");
+#endif
+};
 
 // constructor with filenames
 Speller::Speller(const char* dictName, char* textName) {
+#ifdef DEBUG
     //tagging(TAG, "Speller(const char*, char*)");
-    
+#endif
     dictionary = dictName;
     text = textName;
 };
 
+// destructor  for debug
+Speller::~Speller() {
+#ifdef DEBUG
+    //tagging("~Speller()");
+#endif
+};
+
 // organization of resources to check words
-int Speller::checking() {   
+int Speller::checking() {
+#ifdef DEBUG
     //tagging(TAG, "checking");
-    
+#endif
     // class for measurement of time
     Stopwatch stopwatch;
     
@@ -99,8 +119,10 @@ int Speller::checking() {
 
 // load dictionary
 int Speller::loadDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {
+#ifdef DEBUG
     //tagging(TAG, "loadDictionary");
-    
+#endif
+
     stopwatch.start();
     bool loaded = dict.load(dictionary);
     stopwatch.stop();
@@ -120,8 +142,10 @@ int Speller::loadDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {
 
 // determine dictionary's size
 unsigned int Speller::determineDictionarySize(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {       
+#ifdef DEBUG
     //tagging(TAG, "determineDictionarySize");
-    
+#endif
+
     stopwatch.start();
     unsigned int dictSize = dict.size();
     stopwatch.stop();
@@ -134,8 +158,10 @@ unsigned int Speller::determineDictionarySize(Stopwatch& stopwatch, Dictionary <
 
 // unload dictionary
 int Speller::unloaDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) { 
+#ifdef DEBUG
     //tagging(TAG, "unloaDictionary");
-    
+#endif
+
     stopwatch.start();
     bool unloaded = dict.unload();
     stopwatch.stop();
@@ -155,8 +181,10 @@ int Speller::unloaDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {
 
 // report benchmarks
 void Speller::reportBenchmarks(Stopwatch& stopwatch, int misspellings, unsigned int& n, int words) {
+#ifdef DEBUG
     //tagging(TAG, "reportBenchmarks");
-    
+#endif
+
     cout<<endl
         <<"WORDS MISSPELLED:     "<<misspellings<<endl
         <<"WORDS IN DICTIONARY:  "<<n<<endl

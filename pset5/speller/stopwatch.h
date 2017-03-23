@@ -27,6 +27,12 @@ public:
     // debug info
     void tagging(const char* NAME);
 
+    // constructor for debug
+    Stopwatch();
+    
+    // destructor  for debug
+    ~Stopwatch();
+    
     // get results for report them
     double getResults(int index);
     

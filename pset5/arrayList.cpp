@@ -7,10 +7,14 @@ using namespace std;
 
 #include "arrayList.h"
 
+//#define DEBUG
+
 // create the array with definite size
-void ArrayList::writeOfArray(int size)
-{
-    //tagging("writeOfArray");
+void ArrayList::writeOfArray(int size) {
+#ifdef DEBUG
+    tagging("writeOfArray");
+#endif
+
     array = new int [size];
     // initialization of the array by zeros
     for(int i = 0; i < size; i++) {
@@ -23,7 +27,10 @@ void ArrayList::writeOfArray(int size)
     
 // dynamically changing the size of the array
 void ArrayList::rewriteOfArray() {
-    //tagging("rewriteOfArray");
+#ifdef DEBUG
+    tagging("rewriteOfArray");
+#endif
+
     int* newArray = new int [allocated];
     
     for(int i = 0; i < sizeOfArray; i++) {
@@ -35,7 +42,10 @@ void ArrayList::rewriteOfArray() {
     
 // dynamically changing one element of the array
 void ArrayList::rewriteOfArray(int index) {
-    //tagging("rewriteOfArray(int index)");
+#ifdef DEBUG
+    tagging("rewriteOfArray(int index)");
+#endif
+
     allocated--;
     int* newArray = new int [allocated];
     for(int i = 0, j = 0; i < sizeOfArray; i++, j++) {
@@ -52,6 +62,9 @@ void ArrayList::rewriteOfArray(int index) {
 
 // deleting temporary array
 void ArrayList::deleteArray(int* newArray) {
+#ifdef DEBUG
+    tagging("deleteArray");
+#endif
     // create temporary array
     int* tmpArray = array;
     array = newArray;
@@ -61,21 +74,29 @@ void ArrayList::deleteArray(int* newArray) {
     
 // demonstration of array
 void ArrayList::demoArray(int size) {
-    //tagging("demoArray");
+#ifdef DEBUG
+    tagging("demoArray");
+#endif
+
     for(int i = 0; i < size; i++) {
         cout<<array[i]<<" ";
     }
     cout<<endl;
 }
     
+#ifdef DEBUG
 // debug info
 void ArrayList::tagging(const char* NAME) {
     cout<<TAG<<" === "<<NAME<<" === "<<endl;
 }
+#endif
     
 // constructor by default
 ArrayList::ArrayList() {
-    //tagging("ArrayList()");
+#ifdef DEBUG
+    tagging("ArrayList()");
+#endif
+
     array = new int [SIZE_ON_DEFAULT];
     // dimension by default
     allocated = SIZE_ON_DEFAULT;
@@ -84,8 +105,10 @@ ArrayList::ArrayList() {
     
 // constructor with custom size
 ArrayList::ArrayList(int size) {
-    //tagging("ArrayList(int size)");
-    // size = 1 ? sizeOfArray
+#ifdef DEBUG
+    tagging("ArrayList(int size)");
+#endif
+    // if incorrect
     if(size < 1) {
         // memory allocation in the range of positive integers
         throw (std::out_of_range("elements in memory less than 1"));
@@ -95,13 +118,19 @@ ArrayList::ArrayList(int size) {
 
 // free memory thanks destructor
 ArrayList::~ArrayList() {
-    //tagging("~ArrayList()");
+#ifdef DEBUG
+    tagging("~ArrayList()");
+#endif
+
     delete [] array;
 }
     
 // write data to the element of array
 void ArrayList::add(int data) {
-    //tagging("add");
+#ifdef DEBUG
+    tagging("add");
+#endif
+
     if(sizeOfArray > 0 && allocated == sizeOfArray) {
         allocated *= TWICE;
         rewriteOfArray();
@@ -113,7 +142,10 @@ void ArrayList::add(int data) {
     
 // receive the element of array by index
 int ArrayList::get(int index) {
-    //tagging("get");
+#ifdef DEBUG
+    tagging("get");
+#endif
+
     if(index < 0 || index > sizeOfArray){
         // incorrect argument
         throw (std::invalid_argument("bad argument"));
@@ -124,7 +156,10 @@ int ArrayList::get(int index) {
     
 // remove one element from array by index
 int ArrayList::remove(int index) {
-    //tagging("remove");
+#ifdef DEBUG
+    tagging("remove");
+#endif
+
     if(index < 0 || index > sizeOfArray){
         // incorrect argument
         throw (std::invalid_argument("bad argument"));
@@ -137,28 +172,39 @@ int ArrayList::remove(int index) {
     
 // display the size of the array in use
 int ArrayList::size() {
-    //tagging("size");
+#ifdef DEBUG
+    tagging("size");
+#endif
+
     return sizeOfArray;
 }
     
 // free unused elements of array
 void ArrayList::trim() {
-    //tagging("trim");
+#ifdef DEBUG
+    tagging("trim");
+#endif
+
     allocated = sizeOfArray;
     rewriteOfArray();
 }
     
 // display the contents of the array
 void ArrayList::show() {
-    //tagging("show");
+#ifdef DEBUG
+    tagging("show");
+#endif
+
     demoArray(sizeOfArray);
 }
-    
+
+#ifdef DEBUG
 // DEBUG
 void ArrayList::showFull() {
-    //tagging("showFull");
+    tagging("showFull");
     demoArray(allocated);
 }
+#endif
 
 int main(void)
 {
