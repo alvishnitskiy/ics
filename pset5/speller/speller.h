@@ -13,7 +13,7 @@
 #include "stopwatch.h"
 #include "wordsaudit.h"
 #include "dictionary.h"
-#include "table.h"
+#include "trie.h"
 
 class Speller {
 
@@ -45,13 +45,13 @@ public:
     int checking();
     
     // load dictionary
-    int loadDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict);
+    int loadDictionary(Stopwatch& stopwatch, Dictionary <Trie>& dict);
     
     // determine dictionary's size
-    unsigned int determineDictionarySize(Stopwatch& stopwatch, Dictionary <HashMap>& dict);
+    unsigned int determineDictionarySize(Stopwatch& stopwatch, Dictionary <Trie>& dict);
     
     // unload dictionary
-    int unloaDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict);
+    int unloaDictionary(Stopwatch& stopwatch, Dictionary <Trie>& dict);
     
     // report benchmarks
     void reportBenchmarks(Stopwatch& stopwatch, int misspellings, unsigned int& n, int words);

@@ -7,7 +7,7 @@
 using namespace std;
 
 #include <stdexcept>
-#include <math.h>
+
 #include "linkedList.h"
 
 class HashMap {

@@ -7,7 +7,7 @@
 
 #include "stopwatch.h"
 #include "dictionary.h"
-#include "table.h"
+#include "trie.h"
 
 class WordsAudit {
 
@@ -17,7 +17,7 @@ private:
     Stopwatch* stopwatch;
     
     // pointer on default datastructure
-    Dictionary <HashMap>* dict;
+    Dictionary <Trie>* dict;
     
     // pointer on textfile
     FILE* fp;
@@ -37,7 +37,7 @@ public:
     WordsAudit();
     
     // constructor with using stopwatch, default datastructure and textfile
-    WordsAudit(Stopwatch& stopwatc, Dictionary <HashMap>& dictionary, FILE* filePointer);
+    WordsAudit(Stopwatch& stopwatc, Dictionary <Trie>& dictionary, FILE* filePointer);
     
     // destructor  for debug
     ~WordsAudit();
@@ -49,7 +49,7 @@ public:
     void alphabetApostrophe(int& c, FILE* fp);
 
     // find a whole word and report misspellings
-    void findWholeWord(Stopwatch& stopwatch, Dictionary <HashMap>& dict);
+    void findWholeWord(Stopwatch& stopwatch, Dictionary <Trie>& dict);
     
     // get number of misspellings for report
     int getMisspellings();

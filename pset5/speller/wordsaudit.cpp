@@ -36,7 +36,7 @@ WordsAudit::WordsAudit() {
 };
 
 // constructor with using stopwatch, default datastructure and textfile
-WordsAudit::WordsAudit(Stopwatch& stopwatc, Dictionary <HashMap>& dictionary, FILE* filePointer) {
+WordsAudit::WordsAudit(Stopwatch& stopwatc, Dictionary <Trie>& dictionary, FILE* filePointer) {
 #ifdef DEBUG
     //tagging(TAG, "WordsAudit(FILE* fp)");
 #endif
@@ -110,7 +110,7 @@ void WordsAudit::alphabetApostrophe(int& c, FILE* fp) {
 }
 
 // find a whole word and report misspellings
-void WordsAudit::findWholeWord(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {
+void WordsAudit::findWholeWord(Stopwatch& stopwatch, Dictionary <Trie>& dict) {
 #ifdef DEBUG
     //tagging(TAG, "foundWholeWord");
 #endif

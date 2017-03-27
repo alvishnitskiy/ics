@@ -59,7 +59,7 @@ int Speller::checking() {
     Stopwatch stopwatch;
     
     // class with template data structure
-    Dictionary <HashMap> dict;
+    Dictionary <Trie> dict;
     
     // load dictionary
     int res = loadDictionary(stopwatch, dict);
@@ -118,7 +118,7 @@ int Speller::checking() {
 }
 
 // load dictionary
-int Speller::loadDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {
+int Speller::loadDictionary(Stopwatch& stopwatch, Dictionary <Trie>& dict) {
 #ifdef DEBUG
     //tagging(TAG, "loadDictionary");
 #endif
@@ -141,7 +141,7 @@ int Speller::loadDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {
 }
 
 // determine dictionary's size
-unsigned int Speller::determineDictionarySize(Stopwatch& stopwatch, Dictionary <HashMap>& dict) {       
+unsigned int Speller::determineDictionarySize(Stopwatch& stopwatch, Dictionary <Trie>& dict) {       
 #ifdef DEBUG
     //tagging(TAG, "determineDictionarySize");
 #endif
@@ -157,7 +157,7 @@ unsigned int Speller::determineDictionarySize(Stopwatch& stopwatch, Dictionary <
 }
 
 // unload dictionary
-int Speller::unloaDictionary(Stopwatch& stopwatch, Dictionary <HashMap>& dict) { 
+int Speller::unloaDictionary(Stopwatch& stopwatch, Dictionary <Trie>& dict) { 
 #ifdef DEBUG
     //tagging(TAG, "unloaDictionary");
 #endif
