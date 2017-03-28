@@ -73,6 +73,12 @@ private:
     // add next node to trie
     bool addNext(NodeTrie* digit, std::vector<int>& v);
     
+    // find next node for deleting
+    bool findNext(NodeTrie* previous, NodeTrie* digit, std::vector<int>& v);
+    
+    // free pointers and removes a node if necessary
+    bool removeNext(NodeTrie* previous, NodeTrie* digit, int j);
+    
     // free pointers and remove nodes in trie
     bool freePointers(NodeTrie* digit);
     

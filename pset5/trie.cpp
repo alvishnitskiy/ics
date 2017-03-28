@@ -227,15 +227,23 @@ bool Trie::remove(int year) {
     // valid year or not
     checkDigit(year);
     
-    NodeTrie* previous;
-    NodeTrie* digit;
-    if (!isEmpty()) {
-        previous = base;
-        digit = base;
+    if (isEmpty()) {
+        return false;
     }
+    NodeTrie* previous = base;
+    NodeTrie* digit = base;
     
     vector<int> vect_year;
     digitToVector(vect_year, year);
+    
+    return findNext(previous, digit, vect_year);
+}
+
+// find next node for deleting
+bool Trie::findNext(NodeTrie* previous, NodeTrie* digit, vector<int>& vect_year) {
+#ifdef DEBUG
+    tagging("findNext");
+#endif
     // use year from vector
     for (vector<int>::iterator j = vect_year.begin(); j != vect_year.end(); j++) {
         // year is present in trie
@@ -251,29 +259,37 @@ bool Trie::remove(int year) {
             digit = digit->getChildNode(*j);
         }
         if(j + 1 == vect_year.end()) {
-            // free final node
-            digit->setData(false);
-            sizeOfTrie--;
-            int i = 0;
-            for(; i < DECIMAL; i++ ){
-                // check array of children
-                if(digit->isEmptyChildNode(i)) {
-                    continue;
-                }
-                else {
-                    break;
-                }
-            }
-            // delete node when is no references
-            if(DECIMAL == i){
-                delete digit;
-                previous->setChildNode(NULL, *j);
-            }
-            return true;
+            
+            return removeNext(previous, digit, *j);
         }
     }
-    
     return false;
+}
+
+// free pointers and removes a node if necessary
+bool Trie::removeNext(NodeTrie* previous, NodeTrie* digit, int j) {
+#ifdef DEBUG
+    tagging("removeNext");
+#endif
+    // free final node
+    digit->setData(false);
+    sizeOfTrie--;
+    int i = 0;
+    for(; i < DECIMAL; i++ ){
+        // check array of children
+        if(digit->isEmptyChildNode(i)) {
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+    // delete node when is no references
+    if(DECIMAL == i){
+        delete digit;
+        previous->setChildNode(NULL, j);
+    }
+    return true;
 }
 
 // get number of data in trie
@@ -337,7 +353,7 @@ void Trie::showNext(NodeTrie* cursor, int index, int result) {
     tagging("showNext");
 #endif
 
-    for(int index = 0; index < DECIMAL; index++ )  {
+    for(int index = 0; index < DECIMAL; index++ ) {
         
         checkNode(cursor, index, result);
     }
