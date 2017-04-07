@@ -5,8 +5,69 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"unicode"
 )
+
+const (
+	ALPHABET  = 26
+	DIFF_CASE = 32
+
+	A_ASCII = 65
+	Z_ASCII = 90
+
+	a_ASCII = 97
+	z_ASCII = 122
+)
+
+type encryptingString struct {
+	// plaintext from user
+	plaintext string
+	// ciphertext as result
+	ciphertext []byte
+}
+
+// get plaintext from user
+func (es *encryptingString) getPlainText() error {
+
+	fmt.Printf("plaintext: ")
+
+	// constructs a new Reader
+	reader := bufio.NewReader(os.Stdin)
+
+	// get entire string of input
+	line, err := reader.ReadString('\n')
+
+	if err != nil {
+		return err
+	}
+	// use new string as plaintext
+	es.plaintext = line
+	return err
+}
+
+// encrypting by formula c[i] = (p[i] + k) mod 26
+func (es *encryptingString) encryptMessage(k byte) error {
+
+	var err error
+	if err = es.getPlainText(); err != nil {
+		return err
+	}
+
+	fmt.Printf("ciphertext: ")
+	// analize each letter
+	for _, c := range []byte(es.plaintext) {
+		// if is letter
+		if c >= A_ASCII && c <= Z_ASCII || c >= a_ASCII && c <= z_ASCII {
+
+			if c, err = changeAlphASCII(k, c); err != nil {
+				return err
+			}
+		}
+		// add characters in result
+		es.ciphertext = append(es.ciphertext, c)
+	}
+
+	return err
+}
 
 func main() {
 
@@ -17,76 +78,19 @@ func main() {
 	}
 
 	// argument indeed numeric
-	if key, err := strconv.Atoi(os.Args[1]); err != nil {
-
-		fmt.Printf("It’s not indeed numeric.")
-		return
-
-	} else {
-		encryptMessage(rune(key), getPlainText())
-	}
-}
-
-// get plaintext from user
-func getPlainText() []rune {
-
-	fmt.Printf("plaintext: ")
-
-	// constructs a new Reader
-	reader := bufio.NewReader(os.Stdin)
-
-	// get entire string of input
-	line, err := reader.ReadString('\n')
+	key, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 
-		fmt.Printf("Incorrect input.")
-		os.Exit(1)
+		fmt.Printf("It’s not indeed numeric.\n")
+		return
 	}
-	//return line
-	return []rune(line)
-}
 
-// encrypting by formula c[i] = (p[i] + k) mod 26
-func encryptMessage(k rune, p []rune) {
+	es := &encryptingString{}
+	if err := es.encryptMessage(byte(key)); err != nil {
 
-	fmt.Printf("ciphertext: ")
-
-	for _, c := range p {
-
-		if unicode.IsLetter(c) {
-
-			fmt.Printf("%c", changeAlphASCII(k, c))
-		} else {
-
-			fmt.Printf("%c", c)
-		}
+		fmt.Println(err)
+	} else {
+		// result with new line
+		fmt.Printf("%s\n", es.ciphertext)
 	}
-}
-
-// ASCII => alphabet change => ASCII
-func changeAlphASCII(key, sym rune) rune {
-
-	const (
-		ALPHABET = 26
-		A_ASCII  = 65
-	)
-
-	var lowerСase bool
-
-	lowerСase = unicode.IsLower(sym)
-	if lowerСase {
-		// In the case of small letters 65 ('A') and 32 ('A'...'a') are deducted
-		sym = unicode.ToUpper(sym)
-	}
-	// In the case of capital letters 65 ('A') is deducted
-	sym = (sym - A_ASCII + key) % ALPHABET
-	sym += A_ASCII
-
-	// Back to small letters
-	if lowerСase {
-		sym = unicode.ToLower(sym)
-		return sym
-	}
-	// For capital letters
-	return sym
 }

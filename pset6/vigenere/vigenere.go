@@ -5,45 +5,28 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"unicode"
 )
 
 const (
-	ALPHABET = 26
-	A_ASCII  = 65
+	ALPHABET  = 26
+	DIFF_CASE = 32
+
+	A_ASCII = 65
+	Z_ASCII = 90
+
+	a_ASCII = 97
+	z_ASCII = 122
 )
 
-func main() {
-
-	if len(os.Args) == 2 {
-		// get checked keys
-		if key, err := getCheckedValue(os.Args[1]); err == nil {
-
-			encryptMessage(key, getPlainText())
-			return
-		}
-	}
-	//else
-	fmt.Printf("Usage: ./vigenere k\n")
-}
-
-// check user input
-func getCheckedValue(userValue string) ([]rune, error) {
-
-	charValue := []rune(userValue)
-
-	for _, c := range charValue {
-
-		// generates new error
-		if !unicode.IsLetter(c) {
-			return charValue, errors.New("Is not a letter")
-		}
-	}
-	return charValue, nil
+type encryptingString struct {
+	// plaintext from user
+	plaintext string
+	// ciphertext as result
+	ciphertext []byte
 }
 
 // get plaintext from user
-func getPlainText() []rune {
+func (es *encryptingString) getPlainText() error {
 
 	fmt.Printf("plaintext: ")
 
@@ -53,74 +36,62 @@ func getPlainText() []rune {
 	// get entire string of input
 	line, err := reader.ReadString('\n')
 	if err != nil {
-
-		fmt.Printf("Incorrect input.")
-		os.Exit(1)
+		return err
 	}
-	//return line
-	return []rune(line)
+	// use new string as plaintext
+	es.plaintext = line
+	return err
 }
 
 // encrypting by formula c[i] = (p[i] + k[j]) mod 26
-func encryptMessage(k, p []rune) {
+func (es *encryptingString) encryptMessage(k []byte) error {
 
+	var err error
+	if err = es.getPlainText(); err != nil {
+		return err
+	}
 	// variable as function to get keys
 	keyInt := changeAlph(k)
 
 	fmt.Printf("ciphertext: ")
-	for _, c := range p {
+	// analize each letter
+	for _, c := range []byte(es.plaintext) {
+		// if is letter
+		if c >= A_ASCII && c <= Z_ASCII || c >= a_ASCII && c <= z_ASCII {
 
-		if unicode.IsLetter(c) {
-
-			fmt.Printf("%c", changeAlphASCII(keyInt(), c))
-		} else {
-
-			fmt.Printf("%c", c)
+			if c, err = changeAlphASCII(keyInt(), c); err != nil {
+				return err
+			}
 		}
+		// add characters in result
+		es.ciphertext = append(es.ciphertext, c)
 	}
+
+	return err
 }
 
-// change runes to alphabet numbers
-func changeAlph(sym []rune) func() rune {
+func main() {
 
-	for s, _ := range sym {
+	err := errors.New("Usage: ./vigenere k\n")
 
-		if unicode.IsLower(sym[s]) {
-			// In the case of small letters 65 ('A') and 32 ('A'...'a') are deducted
-			sym[s] = unicode.ToUpper(sym[s])
+	if len(os.Args) == 2 {
+		// get checked keys
+		var key []byte
+		key, err = getCheckedValue(os.Args[1])
+
+		if err == nil {
+			//encryptMessage(key, getPlainText())
+			es := &encryptingString{}
+
+			if err := es.encryptMessage(key); err == nil {
+				// result with new line
+				fmt.Printf("%s\n", es.ciphertext)
+			}
+			return
 		}
-		// In the case of capital letters 65 ('A') is deducted
-		sym[s] -= A_ASCII
 	}
-	// function provides cyclical getting of keys
-	i := 0
-	return func() (ret rune) {
-		ret = sym[i]
-
-		i = (i + 1) % len(sym)
-		return
+	//else
+	if err != nil {
+		fmt.Print(err)
 	}
-}
-
-// ASCII => alphabet change => ASCII
-func changeAlphASCII(key, sym rune) rune {
-
-	var lowerСase bool
-
-	lowerСase = unicode.IsLower(sym)
-	if lowerСase {
-		// In the case of small letters 65 ('A') and 32 ('A'...'a') are deducted
-		sym = unicode.ToUpper(sym)
-	}
-	// In the case of capital letters 65 ('A') is deducted
-	sym = (sym - A_ASCII + key) % ALPHABET
-	sym += A_ASCII
-
-	// Back to small letters
-	if lowerСase {
-		sym = unicode.ToLower(sym)
-		return sym
-	}
-	// For capital letters
-	return sym
 }

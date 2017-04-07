@@ -2,20 +2,14 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"strings"
-	"unicode"
 )
 
-// more comfortable
-func main() {
-
-	extractInitials(getPersonsName())
-}
-
 // get name from user
-func getPersonsName() string {
+func getPersonsName() (string, error) {
 
 	// constructs a new Reader
 	reader := bufio.NewReader(os.Stdin)
@@ -23,29 +17,40 @@ func getPersonsName() string {
 	// get entire string of input
 	line, err := reader.ReadString('\n')
 	if err != nil {
-
-		fmt.Printf("Incorrect input.")
-		os.Exit(1)
+		return "", err
 	}
 
-	return line
+	return line, nil
 }
 
 // extract initials from giving string
-func extractInitials(line string) {
+func extractInitials(line string, err error) ([]byte, error) {
+
+	// if incorrect
+	if err != nil {
+		return nil, err
+	}
 
 	// splits the string
-	fild := strings.Fields(line)
-	for _, v := range fild {
+	field := strings.Fields(line)
 
-		// сonverts a string into a slice of characters
-		// and gets the first character
-		if c := []rune(v)[0]; unicode.IsLetter(c) {
-
-			// transform character to upper case
-			fmt.Printf("%c", unicode.ToUpper(c))
-		}
+	var result []byte
+	for _, v := range field {
+		// сonverts a string transform character to upper case
+		result = append(result, bytes.ToUpper([]byte(v))[0])
 	}
-	// new line
-	fmt.Println()
+
+	return result, nil
+}
+
+// more comfortable
+func main() {
+
+	if res, err := extractInitials(getPersonsName()); err != nil {
+
+		fmt.Println(err)
+	} else {
+		// result with new line
+		fmt.Printf("%s\n", res)
+	}
 }
