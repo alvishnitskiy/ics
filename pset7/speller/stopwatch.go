@@ -32,30 +32,3 @@ func (sw *Stopwatch) calculate(index int, result float64) int {
 	}
 	return 0
 }
-
-/*
-func main() {
-	sw := &Stopwatch{}
-
-	before := time.Now()
-	time.Sleep(1 * time.Second)
-	after := time.Now()
-	sw.calculate(TIME_LOAD, (after.Sub(before)).Seconds())
-
-	before = time.Now()
-	time.Sleep(1 * time.Second)
-	after = time.Now()
-	sw.calculate(TIME_CHECK, (after.Sub(before)).Seconds())
-
-	before = time.Now()
-	time.Sleep(1 * time.Second)
-	after = time.Now()
-	sw.calculate(TIME_SIZE, (after.Sub(before)).Seconds())
-
-	sw.calculate(TIME_TOTAL, 0.0)
-
-	fmt.Printf("TIME_LOAD %.2f\n", sw.results[TIME_LOAD])
-	fmt.Printf("TIME_CHECK %f\n", sw.results[TIME_CHECK])
-	fmt.Printf("TIME_SIZE %f\n", sw.results[TIME_SIZE])
-	fmt.Printf("TIME_TOTAL %f\n", sw.results[TIME_TOTAL])
-}*/

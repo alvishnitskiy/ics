@@ -28,62 +28,70 @@ const (
 	TIME_TOTAL            // 3
 )
 
-type Speller struct {
+var (
+	workers = runtime.NumCPU()
 	// name of dictionary file
-	dictionary *string
+	dictionary string
 	// name of using textfile
-	text *string
+	text string
+	// pointer on using stopwatch
+	stopwatch *Stopwatch
+	// pointer on default datastructure
+	dict *Dictionary
+	// pointer on words analyzer
+	wordsAudit *WordsAudit
+)
+
+func init() {
+	//tagging("init")
+
+	// class for measurement of time
+	stopwatch = &Stopwatch{}
+	// class with template data structure
+	dict = &Dictionary{}
+	// class for analyze words by letters
+	wordsAudit = &WordsAudit{}
 }
 
 // organization of resources to check words
-func (sp *Speller) checking() error {
+func checking() error {
 	//tagging("checking")
 
-	// class for measurement of time
-	stopwatch := &Stopwatch{}
-
-	// class with template data structure
-	dict := &Dictionary{}
-
 	// load dictionary
-	err := sp.loadDictionary(stopwatch, dict)
+	err := loadDictionary()
 	if err != nil {
 		return err
 	}
-	// class for analyze words by letters
-	wordsAudit := &WordsAudit{stopwatch: stopwatch, dict: dict}
-
 	// check text file
-	err = sp.checkText(wordsAudit)
+	err = checkText()
 	if err != nil {
 		return err
 	}
 	// determine dictionary's size
-	n := determineDictionarySize(stopwatch, dict)
+	n := determineDictionarySize()
 
 	// calculate total time
 	stopwatch.calculate(TIME_TOTAL, 0.0)
 
 	// report benchmarks
-	sp.reportBenchmarks(stopwatch, wordsAudit.getMisspellings(), n, wordsAudit.getWords())
+	reportBenchmarks(wordsAudit.misspellings, n, wordsAudit.words)
 
 	// that's all folks
 	return nil
 }
 
 // load dictionary
-func (sp *Speller) loadDictionary(stopwatch *Stopwatch, dict *Dictionary) error {
+func loadDictionary() error {
 	//tagging("loadDictionary")
 
 	before := time.Now()
-	err := dict.load(*sp.dictionary)
+	err := dict.load()
 	after := time.Now()
 
-	// abort if dictionary not loaded
+	// if dictionary not loaded
 	if err != nil {
 		return err
 	}
-
 	// calculate time to load dictionary
 	stopwatch.calculate(TIME_LOAD, (after.Sub(before)).Seconds())
 
@@ -91,32 +99,26 @@ func (sp *Speller) loadDictionary(stopwatch *Stopwatch, dict *Dictionary) error 
 }
 
 // check text file
-func (sp *Speller) checkText(wordsAudit *WordsAudit) error {
+func checkText() error {
 	//tagging("checkText")
 
-	// Use all the machine's cores
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	// check word's spelling
+	before := time.Now()
+	err := wordsAudit.check()
+	after := time.Now()
 
-	// chanales for misspelings and results
-	checkedWords := make(chan string, workers*4)
-	results := make(chan map[string]int, workers)
-
-	// find words and report misspellings
-	go wordsAudit.findMisspellings(sp.text, checkedWords)
-
-	for i := 0; i < workers; i++ {
-		go processChecks(results, wordsAudit.dict, checkedWords)
+	// if the check does not work
+	if err != nil {
+		return err
 	}
-	//totalForFile := make([]string, 10)
-	totalForFile := make(map[string]int)
-	integrate(results, totalForFile)
-	allResults(totalForFile)
+	// update benchmark
+	stopwatch.calculate(TIME_CHECK, (after.Sub(before)).Seconds())
 
 	return nil
 }
 
 // report benchmarks
-func (sp *Speller) reportBenchmarks(stopwatch *Stopwatch, misspellings int, n uint, words int) {
+func reportBenchmarks(misspellings int, n uint, words int) {
 	//tagging("reportBenchmarks")
 
 	fmt.Print("\n",
@@ -137,25 +139,18 @@ func main() {
 		fmt.Print("Usage: speller [dictionary] text\n")
 		return
 	}
-
-	var dictionary, text string
-
 	if lenArgs == 3 {
 		// determine dictionary to use
 		dictionary = os.Args[1]
-		// try to open text
+		// textfile to open text
 		text = os.Args[2]
 
 	} else {
 		dictionary = DICTIONARY
 		text = os.Args[1]
 	}
-
-	// organization of spell-checking with definite dictionary and textfile
-	speller := &Speller{dictionary: &dictionary, text: &text}
-
 	// organization of resources to check words
-	speller.checking()
+	checking()
 
 	// that's all folks
 	return

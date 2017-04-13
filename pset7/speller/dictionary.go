@@ -5,49 +5,77 @@
 package main
 
 import (
-	"runtime"
-	"sync"
+	"bufio"
+	"errors"
+	"io"
+	"os"
+	"strings"
 )
-
-var workers = runtime.NumCPU()
 
 type Dictionary struct {
 	// default datastructure
-	dataStruct map[rune]string
+	dataStruct map[string]int
 	// number of data in map
 	sizeOfMap uint
-
-	mutex *sync.RWMutex
 }
 
 // Returns true if word is in dictionary else false.
-func (dc *Dictionary) check(word string) bool {
+func (dc *Dictionary) find(word string) bool {
 	//tagging("check")
 
 	// find the word in default datastructure
-	v, found := dc.dataStruct[hash(word)]
-	return found && v == word
+	_, found := dc.dataStruct[strings.ToLower(word)]
+	return found
 }
 
 // Loads dictionary into memory. Returns true if successful else false.
-func (dc *Dictionary) load(dictionary string) error {
+func (dc *Dictionary) load() error {
 	//tagging("load")
 
-	// Use all the machine's cores
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
-	// chanales for words and boolean finish
-	words := make(chan string, workers*4)
-	done := make(chan bool, workers)
-
 	// initialization of dictionary
-	dc.dataStruct = make(map[rune]string)
-	dc.mutex = new(sync.RWMutex)
+	dc.dataStruct = make(map[string]int)
 
-	go readWords(dictionary, words)
-	processWords(done, dc, words)
-	waitUntil(done)
+	err := readWords()
+	if err != nil {
+		return err
+	}
 
+	return nil
+}
+
+// read dictionary file by words
+func readWords() error {
+	//tagging("readWords")
+
+	// open dictionary file
+	dictptr, err := os.Open(dictionary)
+	if err != nil {
+
+		s := "Could not open " + dictionary + ".\n"
+		err := errors.New(s)
+		return err
+	}
+	// close dictionary file
+	defer dictptr.Close()
+
+	bufferedReader := bufio.NewReader(dictptr)
+	// until the end of file
+	for {
+		bs, _, err := bufferedReader.ReadLine()
+		//tmp_word, err := bufferedReader.ReadString('\n')
+		if err != nil {
+			if err != io.EOF {
+				// in the case of a real error
+				return err
+			}
+			break
+		}
+		tmp_word := string(bs)
+		if tmp_word != "" {
+
+			dict.add(tmp_word)
+		}
+	}
 	return nil
 }
 
@@ -55,10 +83,7 @@ func (dc *Dictionary) load(dictionary string) error {
 func (dc *Dictionary) add(word string) {
 	//tagging("add")
 
-	dc.mutex.Lock()
-	defer dc.mutex.Unlock()
-
-	dc.dataStruct[hash(word)] = word
+	dc.dataStruct[word]++
 	dc.sizeOfMap++
 }
 
