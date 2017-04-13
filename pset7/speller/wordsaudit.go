@@ -37,7 +37,7 @@ func (wa *WordsAudit) check() error {
 
 	// find words and report misspellings
 	go readTextFile(checkedWords)
-	// ???
+	// parallel processing
 	for i := 0; i < workers; i++ {
 		go processChecks(results, checkedWords)
 	}
